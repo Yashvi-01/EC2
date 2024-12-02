@@ -28,7 +28,7 @@ jobs:
             cd /home/ubuntu/EC2  # Ensure this path exists on your EC2
 
             # Pull the latest code from the GitHub repository directly
-            #git pull origin master
+            git pull origin master
 
             # Install dependencies using npm (this will run on the EC2 instance)
             
