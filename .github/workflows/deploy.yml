@@ -1,0 +1,28 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - master  # When changes are pushed to the master branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Checks out the repository code
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Use the SSH private key stored in GitHub Secrets
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@44.203.93.213 << 'EOF'
+            cd /home/ec2-user/EC2  # Make sure this is the correct path to your project on EC2
+            git pull origin master  # Pull changes from GitHub
+            npm install  # Install dependencies
+            pm2 restart my-app  # Restart the app using PM2
+          EOF
